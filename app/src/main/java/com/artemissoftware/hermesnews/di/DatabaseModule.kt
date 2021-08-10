@@ -28,6 +28,6 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideDao(database: NewsDataBase) = database.articleDao()
+    fun provideArticleDao(database: NewsDataBase) = database.articleDao()
 
 }
