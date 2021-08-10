@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/gusta/AndroidStudioProjects/HermesNews/app/src/main/res/drawable/ic_favorite.xml" value="0.5708333333333333" />
+        <entry key="..\:/Users/gusta/AndroidStudioProjects/HermesNews/app/src/main/res/layout/fragment_article.xml" value="0.5546875" />
         <entry key="..\:/Users/gusta/AndroidStudioProjects/HermesNews/app/src/main/res/layout/fragment_breaking_news.xml" value="0.5546875" />
         <entry key="..\:/Users/gusta/AndroidStudioProjects/HermesNews/app/src/main/res/layout/fragment_saved_news.xml" value="0.5546875" />
         <entry key="..\:/Users/gusta/AndroidStudioProjects/HermesNews/app/src/main/res/layout/fragment_search_news.xml" value="0.5546875" />
