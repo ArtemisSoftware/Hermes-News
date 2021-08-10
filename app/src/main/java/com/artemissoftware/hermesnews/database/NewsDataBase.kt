@@ -2,6 +2,7 @@ package com.artemissoftware.hermesnews.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.artemissoftware.hermesnews.models.Article
 import com.artemissoftware.hermesnews.util.DatabaseConstants.Companion.DATABASE_VERSION
 
@@ -10,7 +11,7 @@ import com.artemissoftware.hermesnews.util.DatabaseConstants.Companion.DATABASE_
     version = DATABASE_VERSION,
     exportSchema = false
 )
-//@TypeConverters(RecipesTypeConverter::class)
+@TypeConverters(Converters::class)
 abstract class NewsDataBase: RoomDatabase() {
 
     abstract fun articleDao(): ArticleDao
