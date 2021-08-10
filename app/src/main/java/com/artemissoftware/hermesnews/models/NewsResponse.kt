@@ -1,4 +1,4 @@
-package com.artemissoftware.hermesnews.api.models
+package com.artemissoftware.hermesnews.models
 
 data class NewsResponse(
     val articles: List<Article>,

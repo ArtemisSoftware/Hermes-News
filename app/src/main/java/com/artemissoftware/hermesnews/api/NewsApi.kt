@@ -1,6 +1,6 @@
 package com.artemissoftware.hermesnews.api
 
-import com.artemissoftware.hermesnews.api.models.NewsResponse
+import com.artemissoftware.hermesnews.models.NewsResponse
 import com.artemissoftware.hermesnews.util.ApiConstants.Companion.API_KEY
 import retrofit2.Response
 import retrofit2.http.GET
