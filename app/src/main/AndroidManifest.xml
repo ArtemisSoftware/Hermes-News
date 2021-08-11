@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.artemissoftware.hermesnews">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".HermesNewsApplication"
         android:allowBackup="true"
