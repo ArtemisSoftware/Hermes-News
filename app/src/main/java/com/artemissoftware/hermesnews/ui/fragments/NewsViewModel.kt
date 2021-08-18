@@ -28,29 +28,60 @@ class NewsViewModel @ViewModelInject constructor(private val newsRepository: New
 
     fun getBreakingNews(countryCode: String) = viewModelScope.launch {
         breakingNews.postValue(Resource.Loading())
-        val response = newsRepository.getBreakingNews(countryCode, breakingNewsPage)
-        breakingNews.postValue(handleBreakingNewsResponse(response))
+
+        val response = safeApiCall(apiCall = { newsRepository.getBreakingNews(countryCode, breakingNewsPage)}, successHandler = ::handleBreakingNewsResponse)
+        breakingNews.postValue(response)
     }
 
 
-    private fun handleBreakingNewsResponse(response: Response<NewsResponse>) : Resource<NewsResponse> {
-        if(response.isSuccessful) {
-            response.body()?.let { resultResponse ->
-
-                breakingNewsPage++
-                if(breakingNewsResponse == null) {
-                    breakingNewsResponse = resultResponse
-                } else {
-                    val oldArticles = breakingNewsResponse?.articles
-                    val newArticles = resultResponse.articles
-                    oldArticles?.addAll(newArticles)
+    suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>): Resource<T> {
+        try {
+            val response = apiCall()
+            if (response.isSuccessful) {
+                val body = response.body()
+                body?.let {
+                    return Resource.Success(body)
                 }
-
-                return Resource.Success(breakingNewsResponse ?: resultResponse)
             }
+            return Resource.Error("${response.code()} ${response.message()}")
+        } catch (e: Exception) {
+            return Resource.Error(e.message ?: e.toString())
         }
-        return Resource.Error(response.message())
     }
+
+    suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>, successHandler:(T) ->Resource<T>): Resource<T> {
+        try {
+            val response = apiCall()
+            if (response.isSuccessful) {
+                val body = response.body()
+                body?.let {
+                    return successHandler(it)
+                }
+            }
+            return Resource.Error("${response.code()} ${response.message()}")
+        } catch (e: Exception) {
+            return Resource.Error(e.message ?: e.toString())
+        }
+    }
+
+
+
+    private fun handleBreakingNewsResponse(resultResponse: NewsResponse) : Resource<NewsResponse> {
+
+        breakingNewsPage++
+        if(breakingNewsResponse == null) {
+            breakingNewsResponse = resultResponse
+        } else {
+            val oldArticles = breakingNewsResponse?.articles
+            val newArticles = resultResponse.articles
+            oldArticles?.addAll(newArticles)
+        }
+
+        return Resource.Success(breakingNewsResponse ?: resultResponse)
+    }
+
+
+
 
 
     fun searchNews(searchQuery: String) = viewModelScope.launch {

@@ -47,7 +47,7 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
                         isLastPage = viewModel.searchNewsPage == totalPages
 
                         if(isLastPage) {
-                            rvBreakingNews.setPadding(0, 0, 0, 0)
+                            rvSearchNews.setPadding(0, 0, 0, 0)
                         }
                     }
                 }
