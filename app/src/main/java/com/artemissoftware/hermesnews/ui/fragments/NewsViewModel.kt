@@ -3,7 +3,9 @@ package com.artemissoftware.hermesnews.ui.fragments
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.artemissoftware.hermesnews.models.Article
 import com.artemissoftware.hermesnews.models.NewsResponse
 import com.artemissoftware.hermesnews.repository.NewsRepository
 import com.artemissoftware.hermesnews.util.Resource
@@ -53,5 +55,19 @@ class NewsViewModel @ViewModelInject constructor(private val newsRepository: New
         }
         return Resource.Error(response.message())
     }
+
+
+
+
+    fun saveArticle(article: Article) = viewModelScope.launch {
+        newsRepository.upsert(article)
+    }
+
+    fun getSavedNews() = newsRepository.getSavedNews().asLiveData()
+
+    fun deleteArticle(article: Article) = viewModelScope.launch {
+        newsRepository.deleteArticle(article)
+    }
+
 
 }

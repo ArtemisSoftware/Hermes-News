@@ -23,7 +23,7 @@ data class Article(
 ){
 
     fun getArticleSpecification(): ArticleSpecification{
-        return ArticleSpecification(url)
+        return ArticleSpecification(author, content, description, publishedAt, source.name, title, url, urlToImage)
     }
 
 
