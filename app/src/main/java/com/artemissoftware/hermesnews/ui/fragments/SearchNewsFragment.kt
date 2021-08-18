@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.artemissoftware.hermesnews.R
 import com.artemissoftware.hermesnews.ui.MainActivity
@@ -31,9 +32,10 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         viewModel = (activity as MainActivity).viewModel
 
         setupRecyclerView()
+        setupClickListeners()
         search()
 
-        viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
+        viewModel.searchNews.observe(viewLifecycleOwner, { response ->
             when(response) {
                 is Resource.Success -> {
                     //hideProgressBar()
@@ -53,6 +55,19 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
             }
         })
     }
+
+
+
+    private fun setupClickListeners(){
+
+        newsAdapter.setOnItemClickListener {
+
+            val action = SearchNewsFragmentDirections.actionSearchNewsFragmentToArticleFragment(it.getArticleSpecification())
+            findNavController().navigate(action)
+
+        }
+    }
+
 
 
     private fun setupRecyclerView() {
