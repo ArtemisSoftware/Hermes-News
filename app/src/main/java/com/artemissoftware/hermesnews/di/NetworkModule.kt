@@ -1,7 +1,9 @@
 package com.artemissoftware.hermesnews.di
 
+import android.app.Application
 import com.artemissoftware.hermesnews.api.NewsApi
 import com.artemissoftware.hermesnews.util.ApiConstants.Companion.BASE_URL
+import com.artemissoftware.hermesnews.util.NetworkInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,12 +20,18 @@ object NetworkModule {
 
     @Singleton
     @Provides
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(application: Application): OkHttpClient {
 
         val logging = HttpLoggingInterceptor()
         logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+
+        val networkInterceptor = NetworkInterceptor(application)
+
+
         return OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addInterceptor(networkInterceptor)
             .build()
 
     }

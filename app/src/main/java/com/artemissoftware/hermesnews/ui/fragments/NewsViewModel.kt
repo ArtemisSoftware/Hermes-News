@@ -1,18 +1,27 @@
 package com.artemissoftware.hermesnews.ui.fragments
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.TYPE_ETHERNET
+import android.net.ConnectivityManager.TYPE_WIFI
+import android.net.NetworkCapabilities
+import android.net.NetworkCapabilities.*
+import android.os.Build
+import android.provider.ContactsContract.CommonDataKinds.Email.TYPE_MOBILE
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.artemissoftware.hermesnews.HermesNewsApplication
 import com.artemissoftware.hermesnews.models.Article
 import com.artemissoftware.hermesnews.models.NewsResponse
 import com.artemissoftware.hermesnews.repository.NewsRepository
+import com.artemissoftware.hermesnews.util.NoConnectivityException
 import com.artemissoftware.hermesnews.util.Resource
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import java.io.IOException
 
-class NewsViewModel @ViewModelInject constructor(private val newsRepository: NewsRepository): ViewModel(){
+class NewsViewModel @ViewModelInject constructor(private val newsRepository: NewsRepository, application: Application): AndroidViewModel(application){
 
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1
@@ -50,7 +59,35 @@ class NewsViewModel @ViewModelInject constructor(private val newsRepository: New
     }
 
     suspend fun <T> safeApiCall(apiCall: suspend () -> Response<T>, successHandler:(T) ->Resource<T>): Resource<T> {
+
+//        try {
+//            if(hasInternetConnection()) {
+//                val response = apiCall()
+//                if (response.isSuccessful) {
+//                    val body = response.body()
+//                    body?.let {
+//                        return successHandler(it)
+//                    }
+//                }
+//            } else {
+//                return Resource.Error("No internet connection")
+//            }
+//        } catch(t: Throwable) {
+//             when(t) {
+//                is IOException -> Resource.Error("Network Failure")
+//                else -> Resource.Error("Conversion Error")
+//            }
+//        }
+
+
+
+
+
+
+
+
         try {
+            if(hasInternetConnection()) {
             val response = apiCall()
             if (response.isSuccessful) {
                 val body = response.body()
@@ -59,6 +96,9 @@ class NewsViewModel @ViewModelInject constructor(private val newsRepository: New
                 }
             }
             return Resource.Error("${response.code()} ${response.message()}")
+            } else {
+                return Resource.Error("No internet connection")
+            }
         } catch (e: Exception) {
             return Resource.Error(e.message ?: e.toString())
         }
@@ -122,5 +162,34 @@ class NewsViewModel @ViewModelInject constructor(private val newsRepository: New
         newsRepository.deleteArticle(article)
     }
 
+
+
+
+
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication<HermesNewsApplication>().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val activeNetwork = connectivityManager.activeNetwork ?: return false
+            val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+            return when {
+                capabilities.hasTransport(TRANSPORT_WIFI) -> true
+                capabilities.hasTransport(TRANSPORT_CELLULAR) -> true
+                capabilities.hasTransport(TRANSPORT_ETHERNET) -> true
+                else -> false
+            }
+        } else {
+            connectivityManager.activeNetworkInfo?.run {
+                return when(type) {
+                    TYPE_WIFI -> true
+                    TYPE_MOBILE -> true
+                    TYPE_ETHERNET -> true
+                    else -> false
+                }
+            }
+        }
+        return false
+    }
 
 }
