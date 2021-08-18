@@ -22,7 +22,7 @@ class ArticleFragment : Fragment(R.layout.fragment_article) {
 
         webView.apply {
             webViewClient = WebViewClient()
-            loadUrl(args.article.url)
+            args.article.url?.let { loadUrl(it) }
         }
 
 
