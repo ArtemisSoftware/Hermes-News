@@ -2,6 +2,7 @@ package com.artemissoftware.hermesnews.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.artemissoftware.hermesnews.ui.fragments.models.ArticleSpecification
 
 @Entity(
     tableName = "articles"
@@ -19,4 +20,11 @@ data class Article(
     val title: String,
     val url: String,
     val urlToImage: String
-)
+){
+
+    fun getArticleSpecification(): ArticleSpecification{
+        return ArticleSpecification(url)
+    }
+
+
+}

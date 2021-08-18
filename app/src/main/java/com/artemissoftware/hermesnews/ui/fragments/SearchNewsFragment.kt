@@ -29,20 +29,9 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = (activity as MainActivity).viewModel
-        setupRecyclerView()
 
-        var job: Job? = null
-        etSearch.addTextChangedListener { editable ->
-            job?.cancel()
-            job = MainScope().launch {
-                delay(SEARCH_NEWS_TIME_DELAY)
-                editable?.let {
-                    if(editable.toString().isNotEmpty()) {
-                        viewModel.searchNews(editable.toString())
-                    }
-                }
-            }
-        }
+        setupRecyclerView()
+        search()
 
         viewModel.searchNews.observe(viewLifecycleOwner, Observer { response ->
             when(response) {
@@ -74,5 +63,20 @@ class SearchNewsFragment : Fragment(R.layout.fragment_search_news) {
         }
     }
 
+
+    private fun search(){
+        var job: Job? = null
+        etSearch.addTextChangedListener { editable ->
+            job?.cancel()
+            job = MainScope().launch {
+                delay(SEARCH_NEWS_TIME_DELAY)
+                editable?.let {
+                    if(editable.toString().isNotEmpty()) {
+                        viewModel.searchNews(editable.toString())
+                    }
+                }
+            }
+        }
+    }
 
 }
