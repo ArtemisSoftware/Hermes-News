@@ -23,4 +23,4 @@ App that gives breaking news and searches specifi news
 
 Image #1            |  Image #2                   
 :-------------------------:|:----------------------------:
-<img src="images/Hermes_News_1.jpg">    |  <img src="images/Hermes_News_2.jpg">    
+<img src="images/Hermes_News_2.jpg">    |  <img src="images/Hermes_News_1.jpg">    
