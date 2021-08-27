@@ -3,7 +3,7 @@ App that check for news
 
 ## The Brief
 
-App that gives breaking news and searches specifi news
+App that gives breaking news and searches specific news
 
 
 ## Architecture & Libraries
